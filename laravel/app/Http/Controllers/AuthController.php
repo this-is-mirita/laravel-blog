@@ -7,6 +7,11 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\UserType;
 use App\UserStatus;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+use Illuminate\Support\Carbon;
+use App\Helpers\CMail;
+use function Laravel\Prompts\table;
 
 class AuthController extends Controller
 {
@@ -88,6 +93,61 @@ class AuthController extends Controller
                 ->route('admin.login')
                 ->withInput()
                 ->with('fail', 'Неверный пароль');
+        }
+    }
+
+    public function sendPasswordResetLink(Request $request)
+    {
+        // validate form
+        $request->validate([
+            'email' => 'required|email|exists:users,email',
+        ], [
+            'email.required' => 'Почта обязательны',
+            'email.email' => 'Неверный формат почты',
+            'email.exists' => 'Пользователь с такой почтой не найден',
+        ]);
+
+        //get user data
+        $user = User::where('email', $request->email)->first();
+        // renerated token
+        $token = base64_encode(Str::random(64));
+        // check if here is an axisin
+        $oldToken = DB::table('password_reset_tokens')->
+        where('email', $user->email)->first();
+
+        if ($oldToken) {
+            // update existing token если есть такая запись то обновим с новым
+            DB::table('password_reset_tokens')
+                ->where('email', $user->email)
+                ->update([
+                    'token' => $token,
+                    'created_at' => Carbon::now(),
+                ]);
+        } else {
+            DB::table('password_reset_tokens')->insert([
+                'email' => $user->email,
+                'token' => $token,
+                'created_at' => Carbon::now(),
+            ]);
+        }
+        // create clickable action link
+        $actionLink = route('admin.reset_password_form', ['token' => $token]);
+        $data = array(
+            'actionLink' => $actionLink,
+            'user' => $user,
+        );
+        $mail_body = view('email-templates.forgot-template', $data)->render();
+        $mailConfig = array(
+            'recipient_address' => $user->email,
+            'recipient_name' => $user->name,
+            'subject' => 'Reset Password',
+            'body' => $mail_body,
+        );
+
+        if(CMail::send($mailConfig)) {
+            return redirect()->route('admin.login')->with('success', 'Данные направлены на почты');
+        } else {
+            return redirect()->route('admin.forgot')->with('fail', 'Ошибка, попробуйте позже');
         }
     }
 }

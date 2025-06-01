@@ -6,7 +6,6 @@
             <h2 class="text-center text-primary">Login</h2>
         </div>
         <form action="{{ route('admin.login_handler') }}" method="post">
-            <x-form-alerts></x-form-alerts>
             @csrf
             <div class="input-group custom mb-1">
                 <input type="text" class="form-control form-control-lg" placeholder="Username / Email"
@@ -37,10 +36,11 @@
                 </div>
                 <div class="col-6">
                     <div class="forgot-password">
-                        <a href="forgot-password.html">Forgot Password</a>
+                        <a href="{{ route('admin.forgot') }}">Forgot Password</a>
                     </div>
                 </div>
             </div>
+            <x-form-alerts></x-form-alerts>
             <div class="row">
                 <div class="col-sm-12">
                     <div class="input-group mb-0">

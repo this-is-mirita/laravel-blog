@@ -47,18 +47,18 @@
     @stack('stylesheets')
 </head>
 <body>
-<div class="pre-loader">
-    <div class="pre-loader-box">
-        <div class="loader-logo">
-            <img src="/back/vendors/images/deskapp-logo.svg" alt=""/>
-        </div>
-        <div class="loader-progress" id="progress_div">
-            <div class="bar" id="bar1"></div>
-        </div>
-        <div class="percent" id="percent1">0%</div>
-        <div class="loading-text">Loading...</div>
-    </div>
-</div>
+{{--<div class="pre-loader">--}}
+{{--    <div class="pre-loader-box">--}}
+{{--        <div class="loader-logo">--}}
+{{--            <img src="/back/vendors/images/deskapp-logo.svg" alt=""/>--}}
+{{--        </div>--}}
+{{--        <div class="loader-progress" id="progress_div">--}}
+{{--            <div class="bar" id="bar1"></div>--}}
+{{--        </div>--}}
+{{--        <div class="percent" id="percent1">0%</div>--}}
+{{--        <div class="loading-text">Loading...</div>--}}
+{{--    </div>--}}
+{{--</div>--}}
 
 <div class="header">
     <div class="header-left">
@@ -242,9 +242,12 @@
                     <a class="dropdown-item" href="faq.html"
                     ><i class="dw dw-help"></i> Help</a
                     >
-                    <a class="dropdown-item" href="login.html"
-                    ><i class="dw dw-logout"></i> Log Out</a
-                    >
+                    <a class="dropdown-item" href="{{ route('admin.logout') }}"
+                       onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+                    ><i class="dw dw-logout"></i> Log Out</a>
+                    <form action="{{ route('admin.logout') }}" id="logout-form" method="post">
+                        @csrf
+                    </form>
                 </div>
             </div>
         </div>
@@ -255,7 +258,6 @@
         </div>
     </div>
 </div>
-
 <div class="right-sidebar">
     <div class="sidebar-title">
         <h3 class="weight-600 font-16 text-blue">
@@ -425,7 +427,6 @@
         </div>
     </div>
 </div>
-
 <div class="left-side-bar">
     <div class="brand-logo">
         <a href="index.html">
@@ -661,7 +662,6 @@
     </div>
 </div>
 <div class="mobile-menu-overlay"></div>
-
 <div class="main-container">
     <div class="pd-ltr-20 xs-pd-20-10">
         <div class="min-height-200px">
@@ -704,12 +704,6 @@
             <div class="pd-20 bg-white border-radius-4 box-shadow mb-30">
                 @yield('content')
             </div>
-        </div>
-        <div class="footer-wrap pd-20 mb-20 card-box">
-            DeskApp - Bootstrap 4 Admin Template By
-            <a href="https://github.com/dropways" target="_blank"
-            >Ankit Hingarajiya</a
-            >
         </div>
     </div>
 </div>

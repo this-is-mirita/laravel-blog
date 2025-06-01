@@ -128,6 +128,7 @@
       <path value="$PROJECT_DIR$/laravel/vendor/doctrine/lexer" />
       <path value="$PROJECT_DIR$/laravel/vendor/doctrine/inflector" />
       <path value="$PROJECT_DIR$/laravel/vendor/dragonmantank/cron-expression" />
+      <path value="$PROJECT_DIR$/laravel/vendor/phpmailer/phpmailer" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.2" />
