@@ -21,6 +21,6 @@ class AdminController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('admin.login')->with('fail', 'You have been logged out.');
+        return redirect()->route('admin.login')->with('fail', 'Вы вышли из системы');
     }
 }

@@ -8,6 +8,7 @@ use App\Models\User;
 use App\UserType;
 use App\UserStatus;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Support\Carbon;
 use App\Helpers\CMail;
@@ -149,5 +150,67 @@ class AuthController extends Controller
         } else {
             return redirect()->route('admin.forgot')->with('fail', 'Ошибка, попробуйте позже');
         }
+    }
+
+    public function resetForm(Request $request, $token = null)
+    {
+        //dd($token);
+        $isValidToken = DB::table('password_reset_tokens')
+            ->where('token', $token)
+            ->first();
+        if (!$isValidToken) {
+            return redirect()->route('admin.forgot')
+                ->with('fail', 'Неверный токен попробуйте еще раз');
+        } else {
+            $data = [
+                'pageTitle' => 'Reset Password',
+                'token' => $token,
+            ];
+            return view('back.pages.auth.reset', $data);
+
+        }
+    }
+    public function resetPasswordHandler(Request $request){
+        $request->validate([
+            'new_password' => 'required|min:5|
+                required_with:new_password_confirmation|
+                same:new_password_confirmation',
+            'new_password_confirmation' => 'required|min:5',
+
+        ]);
+        // получение данных пользователя
+        $dbToken = DB::table('password_reset_tokens')
+            ->where('token', $request->token)->first();
+        $user = User::where('email', $dbToken->email)->first();
+        // обновление пароля
+        User::where('email', $dbToken->email)->update([
+           'password' => Hash::make($request->new_password)
+        ]);
+        // отправка на почту что новый пароль
+        $data = array(
+            'user' => $user,
+            'new_password' => $request->new_password
+        );
+        $mailBody = view('email-templates.password-changes-template', $data)->render();
+        $mailConfig = array(
+            'recipient_address' => $user->email,
+            'recipient_name' => $user->name,
+            'subject' => 'Password Changes',
+            'body' => $mailBody,
+        );
+        if(CMail::send($mailConfig)) {
+            // удаление токена прошлого
+            DB::table('password_reset_tokens')
+                ->where([
+                    'email' => $dbToken->email,
+                    'token'=>$dbToken->token])
+                ->delete();
+            return redirect()->route('admin.login')->with('success', 'Ваш пароль был изменен, используйте новый пароль');
+        } else {
+            return redirect()
+                ->route('admin.reset_password_form', ['token' => $dbToken->token])
+                ->with('fail', 'Что то не так, попробуйте еще раз');
+        }
+
     }
 }
