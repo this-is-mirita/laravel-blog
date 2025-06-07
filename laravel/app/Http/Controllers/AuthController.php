@@ -155,13 +155,24 @@ class AuthController extends Controller
     public function resetForm(Request $request, $token = null)
     {
         //dd($token);
+        // провекрка на валидку токена
         $isValidToken = DB::table('password_reset_tokens')
             ->where('token', $token)
             ->first();
+
+        // не тру если то наххххуй
         if (!$isValidToken) {
             return redirect()->route('admin.forgot')
                 ->with('fail', 'Неверный токен попробуйте еще раз');
+
         } else {
+            // время ссылки
+            $diffMinutes = Carbon::createFromFormat('Y-m-d H:i:s', $isValidToken->created_at)
+                ->diffInMinutes(Carbon::now());
+            // если токен старый больше 15 то на роут с фаил трай егаин
+            if ($diffMinutes > 15) {
+                return redirect()->route('admin.forgot')->with('fail', 'Ссылка устарела, создайте новую');
+            }
             $data = [
                 'pageTitle' => 'Reset Password',
                 'token' => $token,
