@@ -121,6 +121,7 @@
       <excludeFolder url="file://$MODULE_DIR$/laravel/vendor/voku/portable-ascii" />
       <excludeFolder url="file://$MODULE_DIR$/laravel/vendor/webmozart/assert" />
       <excludeFolder url="file://$MODULE_DIR$/laravel/vendor/livewire/livewire" />
+      <excludeFolder url="file://$MODULE_DIR$/laravel/vendor/sawastacks/kropify-laravel" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

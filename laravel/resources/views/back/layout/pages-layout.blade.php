@@ -4,7 +4,7 @@
     <!-- Basic Page Info -->
     <meta charset="utf-8"/>
     <title>@yield('pageTitle')</title>
-
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- Site favicon -->
     <link
         rel="apple-touch-icon"
@@ -23,13 +23,11 @@
         sizes="16x16"
         href="/back/vendors/images/favicon-16x16.png"
     />
-
     <!-- Mobile Specific Metas -->
     <meta
         name="viewport"
         content="width=device-width, initial-scale=1, maximum-scale=1"
     />
-
     <!-- Google Font -->
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
@@ -43,7 +41,7 @@
         href="/back/vendors/styles/icon-font.min.css"
     />
     <link rel="stylesheet" type="text/css" href="/back/vendors/styles/style.css"/>
-
+    @kropifyStyles
     @stack('stylesheets')
 </head>
 <body>
@@ -481,6 +479,7 @@
 <script src="/back/vendors/scripts/layout-settings.js"></script>
 
 @stack('scripts')
+@kropifyScripts
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 @livewireScripts
 

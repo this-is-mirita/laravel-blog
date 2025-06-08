@@ -130,6 +130,7 @@
       <path value="$PROJECT_DIR$/laravel/vendor/dragonmantank/cron-expression" />
       <path value="$PROJECT_DIR$/laravel/vendor/phpmailer/phpmailer" />
       <path value="$PROJECT_DIR$/laravel/vendor/livewire/livewire" />
+      <path value="$PROJECT_DIR$/laravel/vendor/sawastacks/kropify-laravel" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.2" />
